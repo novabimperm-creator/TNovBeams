@@ -246,22 +246,27 @@ namespace TNovBeams
                 try
                 {
                     json = AsyncHelper.RunSync(() => dataService.LoadModelDataAsync(docName, DBCommandName));
-                    Logger.Log("Десериализация из БД прошла успешно", 1);
+                    if (json.Length < 3) 
+                    { 
+                        //резервная десериализация с диска
+                        bool forProject = true;
+                        json js = new json(in DBCommandName, in forProject, out bool canserialize, out string jsonpath);
+                        if (canserialize)
+                        {
+                            viewModel = JsonConvert.DeserializeObject<BeamsViewModel>(File.ReadAllText(jsonpath));
+                            Logger.Log("Отсутствует запись в БД. Десериализация с диска прошла успешно", 1);
+                        }
+                    }
+                    else
+                    {
+                        viewModel = JsonConvert.DeserializeObject<BeamsViewModel>(json);
+                        Logger.Log("Десериализация из БД прошла успешно", 1);
+                    }
+                   
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log("Ошибка десериализации из БД: " + ex.Message, 4);
-                }
-                if (json == null || json.Length < 3) //резервная десериализация с диска
-                {
-                    bool forProject = true;
-                    json js = new json(in DBCommandName, in forProject, out bool canserialize, out string jsonpath);
-                    if (canserialize)
-                    {
-                        viewModel = JsonConvert.DeserializeObject<BeamsViewModel>(File.ReadAllText(jsonpath));
-                        Logger.Log("Десериализация с диска прошла успешно", 1);
-                    }
-
+                    Logger.Log("Ошибка десериализации: " + ex.Message, 4);
                 }
                 //Вид
                 var wpfview = new BeamsWPF(viewModel);
@@ -278,6 +283,7 @@ namespace TNovBeams
                 catch (Exception ex)
                 {
                     Logger.Log("Ошибка сериализации в БД: " + ex.Message, 4);
+                    //резервная сериализация на диск
                     try
                     {
                         bool forProject = true;
@@ -697,13 +703,6 @@ namespace TNovBeams
                 message = $"Критическая ошибка: {ex.Message}";
                 return Result.Failed;
             }
-
-            
-
-            
-            
-            
-            
         }
         private static List<FamilyInstance> GetBeamsFromCurrentSelection(Autodesk.Revit.DB.Document doc, Autodesk.Revit.UI.Selection.Selection sel)
         {

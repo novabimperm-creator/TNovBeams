@@ -58,25 +58,35 @@ namespace TNovBeams
         {
             string imgPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "TNovClient/");
 
-            string TNovClassName = "Перемычки"; DateTime dateTime = DateTime.Now; string TNovVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            #region Исходные
+            DateTime dateTime = DateTime.Now;
+            string TNovVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string DBCommandName = "Перемычки";
             //подключение приложения и документа
             if (RevitAPI.UiApplication == null) { RevitAPI.Initialize(commandData); }
             UIDocument uidoc = RevitAPI.UiDocument; Document doc = RevitAPI.Document;
             UIApplication uiApp = RevitAPI.UiApplication; Autodesk.Revit.ApplicationServices.Application rvtApp = uiApp.Application;
-            
-            //проверка подключения, запись в журнал
-            if(ServerUtils.CheckConnection(TNovClassName, TNovVersion)==false) return Result.Failed;
+            string docName = doc.Title.ToString(); docName = docName.Replace(",", " ");
+            string userName = rvtApp.Username; userName = userName.Replace(",", "");
+            string docNameUserName = "_" + userName; docName = docName.Replace(docNameUserName, "");
+            docName = docName.Replace(",", "");
+            #endregion
+            #region Журнал
+            string TNovClassName = DBCommandName;
 
+            //проверка подключения, запись в журнал
+            if (ServerUtils.CheckConnection(TNovClassName, TNovVersion) == false) return Result.Failed;
+            #endregion
+            #region Настройки логов
             // создание log - файла
-            Logger.Initialize(TNovClassName,dateTime,TNovVersion);
-            
+            Logger.Initialize(TNovClassName, dateTime, TNovVersion);
 
             var viewModel0 = new AppVersionViewModel();
-            
-            string jsonpath0 = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "TNovClient/TNovSettings.json"); 
+
+            string jsonpath0 = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "TNovClient/TNovSettings.json");
             viewModel0 = JsonConvert.DeserializeObject<AppVersionViewModel>(File.ReadAllText(jsonpath0));
-            if (viewModel0.extendedLogs) 
-            
+            if (viewModel0.extendedLogs)
+
             {
                 var qViewModel = new QuestionWindowViewModel();
                 qViewModel.headtxt = "Включены расширенные логи. " +
@@ -85,14 +95,17 @@ namespace TNovBeams
                 var qwpfview = new QuestionWindow280(qViewModel);
                 qViewModel.CloseRequest += (s, e) => qwpfview.Close();
                 bool? qok = qwpfview.ShowDialog();
-                if (qok != null && qok == true) { Logger.TurnOffExtendedLogs(); } else Logger.Log("Расширенные логи вкл",2);
+                if (qok != null && qok == true) { Logger.TurnOffExtendedLogs(); } else Logger.Log("Расширенные логи вкл", 2);
             }
+            #endregion
+
+            
 
             
             //запрещенные символы
             string rSymbols = @"<>:""/\|?*";
 
-            Logger.Log("Сбор элементов",1);
+            #region Сбор элементов
 
             List<Wall> walls = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls)   //фильтр по категории Стены
                                                                          .WhereElementIsNotElementType()    //фильтр только экземпляры
@@ -200,8 +213,11 @@ namespace TNovBeams
                 return Result.Failed; 
             }
 
+            #endregion
+
+            #region Диалог
+
             Logger.Log("Диалоговое окно", 1);
-            //Диалог
             var viewModel = new BeamsViewModel();
             // Десериализация
             bool forProject = true;
@@ -222,6 +238,10 @@ namespace TNovBeams
                 Logger.Log("Сериализация прошла успешно", 1);
             }
             catch (Exception ex) { Logger.Log("Ошибка при сериализации: " + ex.Message, 4); }
+
+            #endregion
+
+            #region Настройка рабочего вида
 
             ElementId workviewid = uidoc.ActiveView.Id;
             if (viewModel.visible != true)
@@ -301,10 +321,12 @@ namespace TNovBeams
                 Logger.Log("Вид TNov настроен для работы", 1);
             }
 
+            #endregion
+
             //текущая выборка
             Autodesk.Revit.UI.Selection.Selection selection = commandData.Application.ActiveUIDocument.Selection;
 
-
+            #region Вырезание
             if (viewModel.cut)
             {
                 //список перемычек на активном виде (если включена галочка только видимые)
@@ -416,7 +438,9 @@ namespace TNovBeams
 
                 }
             }
+            #endregion
             List<string> badNames = new List<string>();
+            #region Параметры
             if (viewModel.pars)
             {
                 
@@ -605,7 +629,7 @@ namespace TNovBeams
                     }
                 }
             }
-
+            #endregion
             if (badNames.Count > 0)
             {
                 new InfoWindow280("В проекте есть чертежные виды ПР с недопустимыми символами (" +

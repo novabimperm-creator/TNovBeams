@@ -1,11 +1,5 @@
 Z:\DEV\TNovBeams\bin\Release\TNovBeams.dll
 Z:\DEV\TNovBeams\bin\Release\TNovBeams.pdb
-Z:\DEV\TNovBeams\bin\Release\Newtonsoft.Json.dll
-Z:\DEV\TNovBeams\bin\Release\RevitAPI.dll
-Z:\DEV\TNovBeams\bin\Release\RevitAPIUI.dll
-Z:\DEV\TNovBeams\bin\Release\Newtonsoft.Json.xml
-Z:\DEV\TNovBeams\bin\Release\RevitAPI.xml
-Z:\DEV\TNovBeams\bin\Release\RevitAPIUI.xml
 Z:\DEV\TNovBeams\obj\Release\TNovBeams.csproj.AssemblyReference.cache
 Z:\DEV\TNovBeams\obj\Release\BeamsWPF.g.cs
 Z:\DEV\TNovBeams\obj\Release\TNovBeams_MarkupCompile.cache
@@ -13,7 +7,6 @@ Z:\DEV\TNovBeams\obj\Release\TNovBeams_MarkupCompile.lref
 Z:\DEV\TNovBeams\obj\Release\BeamsWPF.baml
 Z:\DEV\TNovBeams\obj\Release\TNovBeams.g.resources
 Z:\DEV\TNovBeams\obj\Release\TNovBeams.csproj.CoreCompileInputs.cache
-Z:\DEV\TNovBeams\obj\Release\TNovBeams.csproj.Up2Date
 Z:\DEV\TNovBeams\obj\Release\TNovBeams.dll
 Z:\DEV\TNovBeams\obj\Release\TNovBeams.pdb
 Z:\DEV\TNovBeams\bin\Release\TNovBeams.dll.config

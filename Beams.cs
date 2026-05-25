@@ -437,6 +437,8 @@ namespace TNovBeams
             }
             #endregion
             List<string> badNames = new List<string>();
+            bool unhandledError = false;
+
             #region Параметры
             if (viewModel.pars)
             {
@@ -539,6 +541,7 @@ namespace TNovBeams
                     {
                         Logger.Log("Ошибка: " + ex.Message, 4);
                         new InfoWindow280("Ошибка: " + ex.Message).ShowDialog();
+                        unhandledError = true;
                     }
                     finally
                     {
@@ -621,6 +624,7 @@ namespace TNovBeams
                     {
                         Logger.Log("Ошибка: " + ex.Message, 4);
                         new InfoWindow280("Ошибка: " + ex.Message).ShowDialog();
+                        unhandledError = true;
                     }
                     finally
                     {
@@ -634,7 +638,11 @@ namespace TNovBeams
                 new InfoWindow280("В проекте есть чертежные виды ПР с недопустимыми символами (" +
                     rSymbols + ") в именах: " + string.Join(", ", badNames)+". Эти виды не обработаны, переименуйте виды и перезапустите плагин.").ShowDialog();
             }
-            
+            if (unhandledError)
+            {
+                Logger.Log("Завершение работы с ошибками.", 4);
+                return Result.Succeeded;
+            }
 
             Logger.Log("Завершение работы.",5);
             return Result.Succeeded;

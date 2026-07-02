@@ -413,8 +413,15 @@ namespace TNovBeams
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (ex.Message.Contains("cannot")) els.Add(elem.Id.IntegerValue.ToString());
-                                    else Logger.Log("Перемычка " + beam.Id+" Элемент " + elem.Id + " Ошибка: " + ex.Message, 4);
+                                    if (ex.Message.Contains("cannot")) 
+                                    {
+#if R2022
+                                        els.Add(elem.Id.IntegerValue.ToString()); 
+#else
+                                        els.Add(elem.Id.Value.ToString());
+#endif
+                                    }
+                                    else Logger.Log("Перемычка " + beam.Id + " Элемент " + elem.Id + " Ошибка: " + ex.Message, 4);
                                 }
 
                             }
@@ -435,7 +442,7 @@ namespace TNovBeams
 
                 }
             }
-            #endregion
+#endregion
             List<string> badNames = new List<string>();
             bool unhandledError = false;
 

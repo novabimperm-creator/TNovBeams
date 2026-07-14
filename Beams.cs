@@ -8,6 +8,7 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using TNovCommon;
 using Outline = Autodesk.Revit.DB.Outline;
@@ -225,6 +226,7 @@ namespace TNovBeams
                 Logger.Log("Десериализация прошла успешно", 1);
             }
             var wpfview = new BeamsWPF(viewModel);
+            new WindowInteropHelper(wpfview) { Owner = uiApp.MainWindowHandle };
             viewModel.CloseRequest += (s, e) => wpfview.Close();
             bool? ok = wpfview.ShowDialog();
             if (ok != null && ok == true) { } else { return Result.Cancelled; }

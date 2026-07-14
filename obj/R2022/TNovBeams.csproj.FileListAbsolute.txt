@@ -26,3 +26,11 @@ Z:\DEV\_build-test\2022-fix\runtimes\win-x64\native\WebView2Loader.dll
 Z:\DEV\_build-test\2022-fix\TNovBeams.dll
 Z:\DEV\_build-test\2022-fix\TNovBeams.pdb
 \\fs-nova\Distr\0.For Admin\_TNov\build\2022\System.Resources.Extensions.dll
+Z:\DEV\_build\TNov\runtimes\win-x64\native\WebView2Loader.dll
+Z:\DEV\_build\TNov\System.Resources.Extensions.dll
+Z:\DEV\_build\TNov\TNovBeams.dll
+Z:\DEV\_build\TNov\TNovBeams.pdb
+Z:\DEV\_build\TNovBeams\runtimes\win-x64\native\WebView2Loader.dll
+Z:\DEV\_build\TNovBeams\System.Resources.Extensions.dll
+Z:\DEV\_build\TNovBeams\TNovBeams.dll
+Z:\DEV\_build\TNovBeams\TNovBeams.pdb

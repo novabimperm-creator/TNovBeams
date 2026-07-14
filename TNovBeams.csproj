@@ -14,4 +14,9 @@
     <ProjectReference Include="..\TNovCommon\TNovCommon.csproj" Private="false" />
   </ItemGroup>
 
+  <!-- ===== Версионирование ===== -->
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ProjectDir)UpdateVersion.ps1&quot;" />
+  </Target>
+
 </Project>
